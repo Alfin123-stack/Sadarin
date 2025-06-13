@@ -4,7 +4,7 @@
     "slug": "Sadarin-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/logo.png", // <- Ikon utama, 1024x1024 dengan padding
     "scheme": "sadarinapp",
     "userInterfaceStyle": "automatic",
     "owner": "alfin12345",
@@ -15,7 +15,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./assets/logo-foreground.png", // <- Ikon transparan dengan padding
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -38,10 +38,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/logo.png",
-          "imageWidth": 200,
+          "image": "./assets/splash.png", // <- Logo splash (dengan padding & transparansi kalau bisa)
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#ffffff",
+          "imageWidth": 200
         }
       ],
       "expo-font",

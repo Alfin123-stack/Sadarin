@@ -9,7 +9,7 @@ export default function Logo({
   return (
     <View className={`items-center mb-4 ${containerClassName}`} style={style}>
       <Image
-        source={require("../assets/logo.png")}
+        source={require("../assets/sadar.png")}
         className={`w-36 h-36 rounded-full ${imageClassName}`}
         resizeMode="cover"
         style={{

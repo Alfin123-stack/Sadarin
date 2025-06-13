@@ -1,17 +1,13 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import ArticleContent from "../../components/ArticleContent";
-import ArticleHeader from "../../components/ArticleHeader";
+import ArticleContent from "../../components/article/ArticleContent";
+import ArticleHeader from "../../components/article/ArticleHeader";
 import Toast from "../../components/Toast";
-import { getBookmarks, toggleBookmark } from "../../scripts/storage";
+import { useArticleDetail } from "../../hooks/useArticleDetail";
 
 export default function ArticleDetailScreen() {
   const { article: articleString } = useLocalSearchParams();
   const router = useRouter();
-  const [bookmarked, setBookmarked] = useState(false);
-  const [toastVisible, setToastVisible] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
   let article = null;
   try {
@@ -20,29 +16,13 @@ export default function ArticleDetailScreen() {
     console.error("Failed to parse article:", error);
   }
 
-  // Cek apakah artikel sudah di-bookmark
-  useEffect(() => {
-    const checkBookmark = async () => {
-      if (!article) return;
-      const saved = await getBookmarks();
-      const found = saved.some((a) => a.url === article.url);
-      setBookmarked(found);
-    };
-    checkBookmark();
-  }, [article]);
-
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setToastVisible(true);
-  };
-
-  const handleBookmark = async () => {
-    const nowBookmarked = await toggleBookmark(article);
-    setBookmarked(nowBookmarked);
-    showToast(
-      nowBookmarked ? "Ditambahkan ke bookmark" : "Dihapus dari bookmark"
-    );
-  };
+  const {
+    bookmarked,
+    toastVisible,
+    toastMessage,
+    setToastVisible,
+    handleBookmark,
+  } = useArticleDetail(article);
 
   if (!article) {
     return (

@@ -20,7 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import { updateEmail, updateProfile } from "firebase/auth";
 import EditableField from "../../components/EditableField";
 import PrimaryButton from "../../components/PrimaryButton";
-import ProfileImageWithName from "../../components/ProfileImageWithName";
+import ProfileImageWithName from "../../components/profile/ProfileImageWithName";
 import ScreenHeader from "../../components/ScreenHeader";
 import Spinner from "../../components/Spinner";
 import Toast from "../../components/Toast";
@@ -52,44 +52,6 @@ export default function EditProfileScreen() {
     setEmail(user?.email || "");
     setProfileImage(user?.photoURL || null);
   }, [user]);
-
-  // const pickImage = async () => {
-  //   const permissionResult =
-  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //   if (!permissionResult.granted) {
-  //     Alert.alert("Izin dibutuhkan", "Aplikasi membutuhkan akses ke galeri.");
-  //     return;
-  //   }
-
-  //   const result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     aspect: [1, 1],
-  //     quality: 1,
-  //   });
-
-  //   if (!result.canceled) {
-  //     const imageUri = result.assets[0].uri;
-  //     setProfileImage(imageUri);
-
-  //     setIsLoading(true);
-  //     try {
-  //       // TODO: Upload imageUri to cloud storage dan dapatkan URL yang valid
-  //       const uploadedUrl = imageUri; // Simulasi sementara
-
-  //       if (user) {
-  //         await updateProfile(user, { photoURL: uploadedUrl });
-  //         await user.reload();
-  //       }
-  //       setToastMessage("Foto profil berhasil diperbarui.");
-  //       setToastVisible(true);
-  //     } catch (error) {
-  //       Alert.alert("Gagal", "Gagal memperbarui foto profil.");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-  // };
 
   const pickImage = async () => {
     const permissionResult =
@@ -356,13 +318,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 12,
     color: "#013237",
+    fontFamily: "Poppins-Regular",
   },
   modalText: {
     fontSize: 15,
     marginBottom: 20,
     color: "#013237",
+    fontFamily: "Poppins-Regular",
   },
   modalButtons: {
     flexDirection: "column",
+    gap: 12,
   },
 });

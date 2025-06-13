@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Image, StyleSheet, Text, View } from "react-native";
-import ImageHeader from "./ImageHeader";
+import ImageHeader from "../ImageHeader";
 
 export default function ArticleHeader({
   article,

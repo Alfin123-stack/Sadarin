@@ -1,6 +1,3 @@
-import { useRouter } from "expo-router";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -11,43 +8,33 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import AuthInput from "../../components/AuthInput";
-import AuthRedirectLink from "../../components/AuthRedirectLink";
 import HeaderSection from "../../components/HeaderSection";
 import Logo from "../../components/Logo";
 import PrimaryButton from "../../components/PrimaryButton";
-import StatusModal from "../../components/StatusModal";
 
-import { useAuth } from "../../contexts/AuthContext";
-import { auth } from "../../firebaseConfig";
 import { useAuthForm } from "../../hooks/useAuthForm";
-
-const getFirebaseErrorMessage = (code) => {
-  switch (code) {
-    case "auth/email-already-in-use":
-      return "Email ini sudah terdaftar. Gunakan email lain atau masuk.";
-    case "auth/invalid-email":
-      return "Format email tidak valid.";
-    case "auth/weak-password":
-      return "Password terlalu lemah. Gunakan minimal 6 karakter.";
-    default:
-      return "Terjadi kesalahan saat mendaftar. Coba lagi.";
-  }
-};
+import { useSignUp } from "../../hooks/useSignUp";
+import AuthInput from "../../components/auth/AuthInput";
+import AuthRedirectLink from "../../components/auth/AuthRedirectLink";
+import StatusModal from "../../components/home/StatusModal";
 
 export default function SignUp() {
-  const router = useRouter();
-  const { setIsLoggingIn, setJustSignedUp } = useAuth();
-
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const {
+    username,
+    setUsername,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    isSubmitting,
+    handleSignUp,
+    modalVisible,
+    isSuccess,
+    modalMessage,
+    handleModalClose,
+  } = useSignUp();
 
   const { focused, handleFocus, handleBlur } = useAuthForm([
     "username",
@@ -55,54 +42,6 @@ export default function SignUp() {
     "password",
     "confirmPassword",
   ]);
-
-  const validateInputs = () => {
-    if (!username.trim()) return "Username harus diisi!";
-    if (!email.trim()) return "Email harus diisi!";
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return "Format email tidak valid!";
-    if (!password) return "Password harus diisi!";
-    if (password.length < 6) return "Password minimal 6 karakter!";
-    if (password !== confirmPassword) return "Konfirmasi password tidak cocok!";
-    return null;
-  };
-
-  const handleSignUp = async () => {
-    const validationError = validateInputs();
-    if (validationError) {
-      setIsSuccess(false);
-      setModalMessage(validationError);
-      setModalVisible(true);
-      return;
-    }
-
-    setIsSubmitting(true);
-    setIsLoggingIn(true);
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      await updateProfile(user, { displayName: username });
-
-      setJustSignedUp(true);
-      setIsSuccess(true);
-      setModalMessage(
-        `Selamat datang, ${username}! Akun kamu berhasil dibuat.`
-      );
-    } catch (error) {
-      setIsSuccess(false);
-      setModalMessage(getFirebaseErrorMessage(error.code));
-    } finally {
-      setIsSubmitting(false);
-      setIsLoggingIn(false);
-      setModalVisible(true);
-    }
-  };
 
   return (
     <SafeAreaView
@@ -190,18 +129,12 @@ export default function SignUp() {
 
       <StatusModal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        onClose={handleModalClose}
         success={isSuccess}
         title={isSuccess ? "Pendaftaran Berhasil" : "Pendaftaran Gagal"}
         message={modalMessage}
         buttonText="Oke"
-        onConfirm={() => {
-          setModalVisible(false);
-          if (isSuccess) {
-            setJustSignedUp(false);
-            router.replace("/(tabs)/home");
-          }
-        }}
+        onConfirm={handleModalClose}
       />
     </SafeAreaView>
   );

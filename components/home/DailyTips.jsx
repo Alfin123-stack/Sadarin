@@ -1,13 +1,6 @@
 // components/home/DailyTips.tsx
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-// const tips = [
-//   "💡 Cobalah tarik napas dalam selama 1 menit.",
-//   "📓 Tulis satu hal yang kamu syukuri hari ini.",
-//   "🌳 Jalan kaki sebentar di luar bisa bantu suasana hati.",
-//   "🧘 Ambil 3 menit untuk duduk tenang dan atur napas.",
-// ];
-
 export default function DailyTips({tips}) {
   return (
     <View className="bg-white rounded-2xl p-4 shadow-md mb-6">

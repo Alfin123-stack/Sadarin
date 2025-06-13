@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { auth } from "../firebaseConfig"; // Sesuaikan path
+import { auth } from "../../firebaseConfig"; // Sesuaikan path
 import DetailedMoodChartModal from "./DetailedMoodChartModal"; // Sesuaikan path jika perlu
 
 const screenWidth = Dimensions.get("window").width;

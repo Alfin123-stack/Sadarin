@@ -1,23 +1,6 @@
 // components/home/SelectedContents.tsx
 import { Image, ScrollView, Text, View } from "react-native";
 
-// const contents = [
-//   {
-//     title: "Teknik Pernapasan",
-//     description: "Latihan pernapasan 4-7-8 untuk menenangkan pikiran.",
-//     image: require("../../assets/onboarding1.jpg"),
-//   },
-//   {
-//     title: "Jurnal Syukur",
-//     description: "Tuliskan 3 hal yang kamu syukuri hari ini.",
-//     image: require("../../assets/onboarding2.jpg"),
-//   },
-//   {
-//     title: "Peregangan Ringan",
-//     description: "Lakukan peregangan selama 5 menit untuk rileks.",
-//     image: require("../../assets/onboarding3.jpg"),
-//   },
-// ];
 
 export default function SelectedContents({contents}) {
   return (

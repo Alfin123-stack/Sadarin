@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   DeviceEventEmitter,
   Modal,
@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth } from "../firebaseConfig"; // Sesuaikan path
-import StatusModal from "./StatusModal"; // Sesuaikan path
+import { auth } from "../../firebaseConfig"; 
+import StatusModal from "./StatusModal";
 
 const moods = [
   { emoji: "😄", label: "Senang" },
@@ -37,7 +37,7 @@ export default function MoodCheck() {
 
   const todayDate = new Date().toISOString().split("T")[0];
 
-  const checkMoodToday = async () => {
+  const checkMoodToday = useCallback(async () => {
     const user = auth.currentUser;
     if (!user) return;
 
@@ -60,11 +60,11 @@ export default function MoodCheck() {
     } catch (e) {
       console.error("Gagal memeriksa data mood hari ini:", e);
     }
-  };
+  }, [todayDate, hasSeenReminder]);
 
   useEffect(() => {
     checkMoodToday();
-  }, [hasSeenReminder]);
+  }, [hasSeenReminder, checkMoodToday]);
 
   const saveMoodToStorage = async (mood) => {
     const user = auth.currentUser;

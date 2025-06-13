@@ -41,6 +41,7 @@
     "react-dom": "19.0.0",
     "react-native": "0.79.3",
     "react-native-chart-kit": "^6.12.0",
+    "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-paper": "^5.14.4",
     "react-native-reanimated": "~3.17.4",
@@ -55,14 +56,19 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~19.0.10",
+    "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "eslint-import-resolver-babel-module": "^5.3.2",
     "typescript": "~5.8.3"
   },
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
-        "exclude": ["react-native-chart-kit", "firebase"],
+        "exclude": [
+          "react-native-chart-kit",
+          "firebase"
+        ],
         "listUnknownPackages": false
       }
     }

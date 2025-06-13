@@ -1,54 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { Animated, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AnimatedTipContent from "../../components/AnimatedTipContent";
+import AnimatedTipContent from "../../components/tips/AnimatedTipContent";
 import PrimaryButton from "../../components/PrimaryButton";
 import ScreenHeader from "../../components/ScreenHeader";
 import Spinner from "../../components/Spinner";
 import tips from "../../constants/tips";
+import useTips from "../../hooks/useTips";
 
 export default function TipScreen() {
-  const [index, setIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  const translateY = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const nextTip = () => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateY, {
-        toValue: 30,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setIndex((prev) => (prev + 1) % tips.length);
-      translateY.setValue(-30);
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateY, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    });
-  };
-
-  const currentTip = tips[index];
+  const { isLoading, currentTip, fadeAnim, translateY, nextTip } =
+    useTips(tips); // gunakan hook di sini
 
   return (
     <SafeAreaView

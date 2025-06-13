@@ -1,26 +1,9 @@
 import { Dimensions, ScrollView, Text, View } from "react-native";
 import ImageHeader from "../components/ImageHeader";
-import NoGamblingQuote from "../components/NoGamblingQuote";
+import NoGamblingQuote from "../components/noGambling/NoGamblingQuote";
 import ScreenHeader from "../components/ScreenHeader";
-import TestimonialCard from "../components/TestimonialCard";
-
-const testimonials = [
-  {
-    name: "M. F. P.",
-    quote:
-      "Saya pemain judi online. Karena judi, saya hancur hingga tidak memiliki apa pun lagi.",
-  },
-  {
-    name: "N. A.",
-    quote:
-      "Judi itu menipu. Jangan terlena karena bisa menghancurkan hidup kita.",
-  },
-  {
-    name: "R. H.",
-    quote:
-      "Awalnya hanya iseng, akhirnya kecanduan. Sekarang saya harus mulai dari nol.",
-  },
-];
+import TestimonialCard from "../components/noGambling/TestimonialCard";
+import { testimonials } from "../constants/testimonials";
 
 export default function NoGamblingScreen() {
   const screenWidth = Dimensions.get("window").width;

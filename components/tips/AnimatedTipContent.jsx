@@ -17,7 +17,7 @@ export default function AnimatedTipContent({
         flex: 1,
       }}>
       <Image
-        source={require("../assets/onboarding1.jpg")}
+        source={require("../../assets/onboarding1.jpg")}
         className="w-72 h-72 mb-6 rounded-2xl"
         resizeMode="cover"
       />

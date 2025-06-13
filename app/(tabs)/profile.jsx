@@ -1,6 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,127 +14,32 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import EditableField from "../../components/EditableField";
+import MoodSummaryField from "../../components/profile/MoodSummaryField";
 import PrimaryButton from "../../components/PrimaryButton";
-import ProfileImageWithName from "../../components/ProfileImageWithName";
+import ProfileImageWithName from "../../components/profile/ProfileImageWithName";
 import ScreenHeader from "../../components/ScreenHeader";
 import Spinner from "../../components/Spinner";
 import Toast from "../../components/Toast";
-import { auth } from "../../firebaseConfig";
-
-// Emoji untuk skala 1–5
-const moodReverse = {
-  1: "😡",
-  2: "😔",
-  3: "😐",
-  4: "🙂",
-  5: "😄",
-};
-
-// Teks + emoji untuk skala 1–5
-const moodText = {
-  1: "Sangat Buruk 😡",
-  2: "Buruk 😔",
-  3: "Netral 😐",
-  4: "Baik 🙂",
-  5: "Sangat Baik 😄",
-};
+import useProfile from "../../hooks/useProfile";
 
 export default function ProfileScreen() {
-  const router = useRouter();
-
-  const [feelingNote, setFeelingNote] = useState(
-    "Perasaan saya hari ini sangat baik tidak ada niatan untuk melakukan judol."
-  );
-  const [feelingEmoji, setFeelingEmoji] = useState("");
-  const [feelingScaleText, setFeelingScaleText] = useState(""); // teks + emoji
-  const [profileImage, setProfileImage] = useState(null);
-
-  const [isEditingFeeling, setIsEditingFeeling] = useState(false);
-  const [toastVisible, setToastVisible] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const user = auth.currentUser;
-
-  // ✅ Refresh saat kembali ke halaman
-  useFocusEffect(
-    useCallback(() => {
-      const refreshUser = async () => {
-        if (user) {
-          await user.reload();
-          const updatedUser = auth.currentUser;
-          setProfileImage(updatedUser?.photoURL);
-        }
-        fetchMoodAverage();
-      };
-      refreshUser();
-    }, [])
-  );
-
-  // ✅ Load awal
-  useEffect(() => {
-    if (!user) {
-      router.replace("/(auth)/signin");
-      return;
-    }
-
-    if (user?.photoURL) {
-      setProfileImage(user.photoURL);
-    }
-
-    fetchMoodAverage();
-  }, [user]);
-
-  // ✅ Ambil mood rata-rata dari AsyncStorage
-  const fetchMoodAverage = async () => {
-    try {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const uid = user.uid;
-      const data = await AsyncStorage.getItem(`moodData-${uid}`);
-      const parsed = data ? JSON.parse(data) : {};
-
-      // Ambil semua nilai mood (angka) dari objek
-      const moodValues = Object.values(parsed).filter(
-        (val) => typeof val === "number" && val > 0
-      );
-
-      if (moodValues.length === 0) {
-        setFeelingEmoji("");
-        setFeelingScaleText("Belum ada data mood");
-        return;
-      }
-
-      const total = moodValues.reduce((sum, val) => sum + val, 0);
-      const avg = Math.round(total / moodValues.length);
-
-      setFeelingEmoji(moodReverse[avg] || "");
-      setFeelingScaleText(moodText[avg] || "Tidak diketahui");
-    } catch (e) {
-      console.error("Gagal mengambil rata-rata mood:", e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSave = async () => {
-    setIsEditingFeeling(false);
-    setToastMessage("Perubahan disimpan.");
-    setToastVisible(true);
-  };
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    if (user) {
-      await user.reload();
-      const updatedUser = auth.currentUser;
-      setProfileImage(updatedUser?.photoURL);
-    }
-    await fetchMoodAverage();
-    setRefreshing(false);
-  };
+  const {
+    feelingNote,
+    setFeelingNote,
+    feelingScaleText,
+    profileImage,
+    isEditingFeeling,
+    setIsEditingFeeling,
+    toastVisible,
+    setToastVisible,
+    toastMessage,
+    isLoading,
+    refreshing,
+    onRefresh,
+    handleSave,
+    user,
+    router,
+  } = useProfile();
 
   return (
     <SafeAreaView
@@ -201,21 +103,13 @@ export default function ProfileScreen() {
                     value={feelingNote}
                     isEditing={isEditingFeeling}
                     onChange={setFeelingNote}
-                    onEditToggle={() => setIsEditingFeeling(!isEditingFeeling)}
+                    onEditToggle={() => setIsEditingFeeling((prev) => !prev)}
                     multiline
                     minHeight={100}
                     placeholder="Tulis perasaanmu di sini..."
                   />
 
-                  <EditableField
-                    title="Skala perasaan (rata-rata)"
-                    value={feelingScaleText}
-                    isEditing={false}
-                    onChange={() => {}}
-                    onEditToggle={() => {}}
-                    editable={false}
-                    containerStyle="mb-8"
-                  />
+                  <MoodSummaryField value={feelingScaleText} />
 
                   <PrimaryButton
                     title="Simpan Perubahan"

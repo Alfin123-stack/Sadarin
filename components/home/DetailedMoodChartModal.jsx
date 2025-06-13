@@ -3,7 +3,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { auth } from "../firebaseConfig"; // Sesuaikan path jika perlu
+import { auth } from "../../firebaseConfig"; // Sesuaikan path jika perlu
 
 const screenWidth = Dimensions.get("window").width;
 

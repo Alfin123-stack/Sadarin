@@ -24,7 +24,7 @@ export default function Index() {
     });
 
     return unsubscribe;
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     Animated.stagger(300, [

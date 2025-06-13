@@ -14,8 +14,9 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import StatusModal from "../../components/StatusModal"; // pastikan path-nya sesuai
+
 import { auth } from "../../firebaseConfig";
+import StatusModal from "../../components/home/StatusModal";
 
 export default function ChangePasswordScreen() {
   const router = useRouter();
@@ -79,7 +80,6 @@ export default function ChangePasswordScreen() {
         message: "Kata sandi berhasil diperbarui.",
       });
     } catch (error) {
-      console.error(error);
       let message = "Terjadi kesalahan. Silakan coba lagi.";
 
       if (error.code === "auth/wrong-password") {

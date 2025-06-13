@@ -1,18 +1,14 @@
-import { useEvent } from "expo";
+
 import { useVideoPlayer, VideoView } from "expo-video";
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-
-const { width, height } = Dimensions.get("window");
+import { useWindowDimensions, StyleSheet, Text, View } from "react-native";
 
 function VideoItem({ item, index, currentIndex }) {
   const player = useVideoPlayer(item.uri, (p) => {
     p.loop = true;
   });
 
-  const { isPlaying } = useEvent(player, "playingChange", {
-    isPlaying: player.playing,
-  });
+  const { height, width } = useWindowDimensions();
 
   useEffect(() => {
     if (index === currentIndex) {
@@ -20,11 +16,10 @@ function VideoItem({ item, index, currentIndex }) {
     } else {
       player.pause();
     }
-  }, [currentIndex]);
+  }, [currentIndex, index, player]);
 
   return (
-    <View style={styles.container}>
-      {/* Video */}
+    <View style={[styles.container, { width, height }]}>
       <VideoView
         player={player}
         style={StyleSheet.absoluteFill}
@@ -33,7 +28,6 @@ function VideoItem({ item, index, currentIndex }) {
         allowsPictureInPicture
       />
 
-      {/* Overlay teks */}
       <View style={styles.overlay}>
         <Text style={styles.title} numberOfLines={1}>
           {item.title}
@@ -42,8 +36,6 @@ function VideoItem({ item, index, currentIndex }) {
           {item.caption}
         </Text>
         <Text style={styles.hashtags}>{item.hashtags?.join(" ")}</Text>
-
-        {/* Tambahan Credit */}
         {item.credit && (
           <Text style={styles.credit} numberOfLines={2}>
             {item.credit}
@@ -58,8 +50,6 @@ export default React.memo(VideoItem);
 
 const styles = StyleSheet.create({
   container: {
-    width,
-    height,
     backgroundColor: "#000",
     justifyContent: "flex-end",
   },

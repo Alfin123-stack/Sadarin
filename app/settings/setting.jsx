@@ -1,10 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { SafeAreaView, ScrollView, View } from "react-native";
-import LogoutButton from "../../components/LogoutButton";
 import ScreenHeader from "../../components/ScreenHeader";
-import SettingItem from "../../components/SettingItem";
-import SettingsSection from "../../components/SettingsSection";
+import SettingsSection from "../../components/settings/SettingsSection";
+import SettingItem from "../../components/settings/SettingItem";
+import LogoutButton from "../../components/settings/LogoutButton";
 
 export default function SettingsScreen() {
   const router = useRouter();

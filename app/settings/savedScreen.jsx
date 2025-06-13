@@ -2,10 +2,10 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ArticleCard from "../../components/ArticleCard";
-import ArticleSkeleton from "../../components/ArticleSkeleton";
 import ScreenHeader from "../../components/ScreenHeader";
 import { getBookmarks } from "../../scripts/storage";
+import ArticleSkeleton from "../../components/article/ArticleSkeleton";
+import ArticleCard from "../../components/article/ArticleCard";
 
 export default function SavedScreen() {
   const router = useRouter();

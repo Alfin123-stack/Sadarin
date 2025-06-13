@@ -2,9 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
-import { useAuth } from "../contexts/AuthContext"; // tambahkan ini
-import { auth } from "../firebaseConfig";
-import StatusModal from "./StatusModal"; // pastikan path benar
+import { useAuth } from "../../contexts/AuthContext";
+import { auth } from "../../firebaseConfig";
+import StatusModal from "../home/StatusModal";
+
 
 export default function LogoutButton() {
   const router = useRouter();

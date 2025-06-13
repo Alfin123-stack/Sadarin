@@ -1,81 +1,35 @@
-import { useRouter } from "expo-router";
-import { useState } from "react";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import AuthInput from "../../components/AuthInput";
-import AuthRedirectLink from "../../components/AuthRedirectLink";
+import AuthInput from "../../components/auth/AuthInput";
+import AuthRedirectLink from "../../components/auth/AuthRedirectLink";
 import HeaderSection from "../../components/HeaderSection";
 import Logo from "../../components/Logo";
 import PrimaryButton from "../../components/PrimaryButton";
-import StatusModal from "../../components/StatusModal";
+import StatusModal from "../../components/home/StatusModal";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useAuth } from "../../contexts/AuthContext";
-import { auth } from "../../firebaseConfig";
+import { useState } from "react";
 import { useAuthForm } from "../../hooks/useAuthForm";
-
-// Konversi error Firebase ke bahasa yang user-friendly
-const getFirebaseErrorMessage = (code) => {
-  switch (code) {
-    case "auth/user-not-found":
-      return "Email belum terdaftar. Yuk daftar dulu.";
-    case "auth/wrong-password":
-    case "auth/invalid-credential":
-      return "Email atau kata sandi salah. Coba lagi, ya.";
-    case "auth/invalid-email":
-      return "Format email tidak valid.";
-    case "auth/too-many-requests":
-      return "Terlalu banyak percobaan gagal. Coba beberapa saat lagi.";
-    default:
-      return "Terjadi kesalahan saat masuk. Silakan coba kembali.";
-  }
-};
+import { useSignIn } from "../../hooks/useSignIn"; // gunakan custom hook
 
 export default function SignIn() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { focused, handleFocus, handleBlur } = useAuthForm([
     "email",
     "password",
   ]);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [shouldNavigate, setShouldNavigate] = useState(false);
-
-  const { setIsLoggingIn } = useAuth();
-
-  const handleSignIn = async () => {
-    if (!email || !password) {
-      setIsSuccess(false);
-      setModalMessage("Email dan kata sandi wajib diisi!");
-      setModalVisible(true);
-      return;
-    }
-
-    setIsSubmitting(true);
-    setIsLoggingIn(true);
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setIsSuccess(true);
-      setModalMessage(`Selamat datang kembali, ${email}!`);
-      setShouldNavigate(true);
-      setModalVisible(true);
-    } catch (error) {
-      setIsLoggingIn(false); // penting: reset flag kalau gagal
-      setIsSuccess(false);
-      setModalMessage(getFirebaseErrorMessage(error.code));
-      setModalVisible(true);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const {
+    signIn,
+    isSubmitting,
+    modalVisible,
+    isSuccess,
+    modalMessage,
+    handleModalConfirm,
+    setModalVisible,
+  } = useSignIn();
 
   return (
     <>
@@ -116,7 +70,7 @@ export default function SignIn() {
 
           <PrimaryButton
             title={isSubmitting ? "Sedang masuk..." : "Masuk"}
-            onPress={handleSignIn}
+            onPress={() => signIn(email, password)}
             containerClassName="mt-6 py-4 rounded-full items-center shadow-md"
             disabled={isSubmitting}
           />
@@ -136,16 +90,7 @@ export default function SignIn() {
         title={isSuccess ? "Berhasil Masuk" : "Gagal Masuk"}
         message={modalMessage}
         buttonText="Oke"
-        onConfirm={() => {
-          setModalVisible(false);
-          if (shouldNavigate) {
-            setTimeout(() => {
-              router.replace("/(tabs)/home");
-              setShouldNavigate(false);
-              setIsLoggingIn(false); // reset flag setelah redirect
-            }, 300);
-          }
-        }}
+        onConfirm={handleModalConfirm}
       />
     </>
   );

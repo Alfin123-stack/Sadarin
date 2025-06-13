@@ -13,7 +13,7 @@ function isValidHttpUrl(string) {
 }
 
 // Fallback image lokal jika URL rusak
-const fallbackImage = require("../assets/onboarding2.jpg");
+const fallbackImage = require("../../assets/onboarding2.jpg");
 
 export default function ArticleCard({ article, onPress }) {
 const formattedDate =
